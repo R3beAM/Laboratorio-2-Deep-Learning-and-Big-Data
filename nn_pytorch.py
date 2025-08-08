@@ -72,11 +72,13 @@ for epoch in range(n_epochs):
 model.eval()
 with torch.no_grad():
     preds = model(tensor_X_test)
-    mse = criterion(preds, tensor_y_test).item()
     # Convert predictions and targets back to original scale
     preds_orig = preds.numpy() * y_std + y_mean
     y_test_orig = tensor_y_test.numpy() * y_std + y_mean
-    rmse = np.sqrt(((preds_orig - y_test_orig) ** 2).mean())
+    mse = np.mean((preds_orig - y_test_orig) ** 2)
+    ss_res = ((preds_orig - y_test_orig) ** 2).sum()
+    ss_tot = ((y_test_orig - y_test_orig.mean()) ** 2).sum()
+    r2 = 1 - ss_res / ss_tot
 
-print(f"Final Test MSE (scaled): {mse:.4f}")
-print(f"Final Test RMSE: {rmse:.2f}")
+print(f"Final Test MSE: {mse:.2f}")
+print(f"Final Test R^2: {r2:.4f}")

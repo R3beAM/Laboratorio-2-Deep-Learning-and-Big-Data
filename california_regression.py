@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Load California housing data
 # Columns: longitude, latitude, housing_median_age, total_rooms,
@@ -55,10 +56,8 @@ def calc_metrics(preds: torch.Tensor, target: torch.Tensor) -> tuple[float, floa
     """Return MSE and R^2 in original target scale."""
     preds_np = preds.numpy() * y_std + y_mean
     target_np = target.numpy() * y_std + y_mean
-    mse = ((preds_np - target_np) ** 2).mean()
-    r2 = 1 - ((preds_np - target_np) ** 2).sum() / (
-        (target_np - target_np.mean()) ** 2
-    ).sum()
+    mse = mean_squared_error(target_np, preds_np)
+    r2 = r2_score(target_np, preds_np)
     return mse, r2
 
 # Training loop

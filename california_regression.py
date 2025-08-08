@@ -50,6 +50,17 @@ model = nn.Sequential(
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
+
+def calc_metrics(preds: torch.Tensor, target: torch.Tensor) -> tuple[float, float]:
+    """Return MSE and R^2 in original target scale."""
+    preds_np = preds.numpy() * y_std + y_mean
+    target_np = target.numpy() * y_std + y_mean
+    mse = ((preds_np - target_np) ** 2).mean()
+    r2 = 1 - ((preds_np - target_np) ** 2).sum() / (
+        (target_np - target_np.mean()) ** 2
+    ).sum()
+    return mse, r2
+
 # Training loop
 n_epochs = 20
 for epoch in range(n_epochs):
@@ -65,19 +76,16 @@ for epoch in range(n_epochs):
         model.eval()
         with torch.no_grad():
             preds = model(tensor_X_test)
-            val_loss = criterion(preds, tensor_y_test)
-        print(f"Epoch {epoch+1}/{n_epochs}, Validation MSE: {val_loss.item():.4f}")
+            mse, r2 = calc_metrics(preds, tensor_y_test)
+        print(
+            f"Epoch {epoch+1}/{n_epochs}, Validation MSE: {mse:.4f}, R^2: {r2:.4f}"
+        )
 
 # Final evaluation
 model.eval()
 with torch.no_grad():
-    preds_scaled = model(tensor_X_test)
-    preds_orig = preds_scaled.numpy() * y_std + y_mean
-    y_test_orig = tensor_y_test.numpy() * y_std + y_mean
-    mse = ((preds_orig - y_test_orig) ** 2).mean()
-    r2 = 1 - ((preds_orig - y_test_orig) ** 2).sum() / (
-        (y_test_orig - y_test_orig.mean()) ** 2
-    ).sum()
+    preds = model(tensor_X_test)
+    mse, r2 = calc_metrics(preds, tensor_y_test)
 
 print(f"Final Test MSE: {mse:.2f}")
 print(f"Final Test R^2: {r2:.4f}")

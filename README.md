@@ -11,4 +11,4 @@ python nn_pytorch.py
 
 Instala las dependencias listadas en `requirements.txt` antes de ejecutar.
 
-Al finalizar, el modelo reporta el **error cuadrático medio (MSE)** y el **coeficiente de determinación R^2** sobre el conjunto de prueba.
+La evaluación del modelo utiliza dos métricas: el **error cuadrático medio (MSE)** y el **coeficiente de determinación R^2**. Durante el entrenamiento se muestran ambos valores en el conjunto de prueba.

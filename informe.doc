@@ -2,11 +2,7 @@ Informe de Experimentos - California Housing
 
 1. Preprocesamiento de datos
 - Carga de los datos mediante `np.loadtxt`.
-- División de los datos en conjuntos de entrenamiento (80%) y prueba (20%) usando una permutación aleatoria fija.
-- Estandarización de cada característica y del objetivo restando la media y dividiendo por la desviación estándar calculada sobre el conjunto de entrenamiento.
-- Conversión de los arreglos a tensores de `torch` y creación de un `DataLoader` con tamaño de lote 64 y barajado de muestras.
 
-Justificación: La estandarización estabiliza el entrenamiento y el `DataLoader` permite optimizar en mini-lotes, lo que mejora la convergencia.
 
 2. Experimento y detalles de los hiperparámetros
 - Arquitectura: red secuencial con capas [8 -> 64 -> 32 -> 1] y funciones de activación ReLU en las capas ocultas.
@@ -14,6 +10,7 @@ Justificación: La estandarización estabiliza el entrenamiento y el `DataLoader
 - Optimizador: Adam con tasa de aprendizaje de 0.001.
 - Número de épocas: 20.
 - Tamaño de lote: 64.
+
 
 3. Resultados de la experimentación
 Tabla de MSE en el conjunto de validación:
@@ -32,4 +29,4 @@ Resultados finales sobre el conjunto de prueba:
 El MSE de validación disminuye gradualmente, mostrando una mejora constante del modelo. El MSE final sobre el conjunto de prueba indica que las predicciones presentan un error cuadrático medio considerable debido a la escala original del valor de la vivienda, mientras que el R^2 de 0.7782 sugiere que el modelo explica cerca del 78% de la varianza de los precios.
 
 5. Conclusiones
-La red neuronal propuesta logra una capacidad predictiva razonable sobre el conjunto California Housing, aunque podría beneficiarse de ajustes adicionales en la arquitectura o en la regularización para mejorar la generalización. Debido a limitaciones del entorno no se incluyeron gráficos.
+

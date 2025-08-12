@@ -38,7 +38,10 @@ tensor_y_test = torch.tensor(y_test, dtype=torch.float32)
 train_dataset = TensorDataset(tensor_X_train, tensor_y_train)
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
-# Define a simple neural network for regression
+# Define a small feedforward network for regression.
+# Two hidden layers (64, 32) with ReLU activations provide enough capacity to learn
+# non-linear interactions in the eight input features while keeping the parameter
+# count manageable to limit overfitting.
 model = nn.Sequential(
     nn.Linear(X_train.shape[1], 64),
     nn.ReLU(),

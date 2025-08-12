@@ -2,19 +2,19 @@ Informe de Experimentos - California Housing
 
 1. Preprocesamiento de datos
 - Carga de los datos mediante `np.loadtxt`.
-<<<<<<< pl1g3r-codex/create-detailed-report-on-data-preprocessing-and-results
+
 - División de los datos en conjuntos de entrenamiento (80%) y prueba (20%) usando una permutación aleatoria fija para asegurar reproducibilidad y disponer de suficiente información de entrenamiento mientras se reserva un subconjunto representativo para evaluación.
 - Estandarización de cada característica y del objetivo restando la media y dividiendo por la desviación estándar calculada sobre el conjunto de entrenamiento.
 - Conversión de los arreglos a tensores de `torch` y creación de un `DataLoader` con tamaño de lote 64 y barajado de muestras.
 
 Justificación: La división 80/20 con permutación aleatoria fija es un compromiso estándar que maximiza la cantidad de datos para el aprendizaje y asegura una evaluación objetiva y reproducible. La estandarización estabiliza el entrenamiento. La conversión a tensores de `torch` permite aprovechar el motor de autograd y la aceleración de PyTorch, mientras que el `DataLoader` con tamaño de lote 64 y barajado aleatorio viabiliza la optimización en mini-lotes y evita sesgos por el orden de las muestras.
-=======
+
 - División de los datos en conjuntos de entrenamiento (80%) y prueba (20%) usando una permutación aleatoria fija.
 - Estandarización de cada característica y del objetivo restando la media y dividiendo por la desviación estándar calculada sobre el conjunto de entrenamiento.
 - Conversión de los arreglos a tensores de `torch` y creación de un `DataLoader` con tamaño de lote 64 y barajado de muestras.
 
 Justificación: La estandarización estabiliza el entrenamiento y el `DataLoader` permite optimizar en mini-lotes, lo que mejora la convergencia.
->>>>>>> main
+
 
 2. Experimento y detalles de los hiperparámetros
 - Arquitectura: red secuencial con capas [8 -> 64 -> 32 -> 1] y funciones de activación ReLU en las capas ocultas.
@@ -22,7 +22,7 @@ Justificación: La estandarización estabiliza el entrenamiento y el `DataLoader
 - Optimizador: Adam con tasa de aprendizaje de 0.001.
 - Número de épocas: 20.
 - Tamaño de lote: 64.
-<<<<<<< pl1g3r-codex/create-detailed-report-on-data-preprocessing-and-results
+
 Justificación: la arquitectura de dos capas ocultas con 64 y 32 neuronas permite modelar relaciones no lineales sin un costo computacional excesivo. Las activaciones ReLU facilitan la propagación de gradientes. El MSE es apropiado para la regresión y Adam con tasa de aprendizaje 0.001 asegura una convergencia estable. Entrenar 20 épocas equilibra aprendizaje y riesgo de sobreajuste, mientras que un lote de 64 equilibra estabilidad del gradiente y memoria.
 Justificación de la red neuronal propuesta: Se eligió una red totalmente conectada porque el conjunto California Housing contiene relaciones no lineales entre sus ocho variables de entrada y el valor de la vivienda. Dos capas ocultas de 64 y 32 neuronas ofrecen la flexibilidad suficiente para aproximar dichas relaciones complejas en un tamaño de datos moderado (~20k muestras) manteniendo un número de parámetros manejable. Esto facilita captar interacciones relevantes sin incurrir en sobreajuste excesivo, mientras que las activaciones ReLU favorecen un entrenamiento estable y eficiente.
 

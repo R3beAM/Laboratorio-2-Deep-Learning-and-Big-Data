@@ -1,9 +1,4 @@
-"""Paso a paso para entrenar y evaluar una red neuronal en el conjunto California Housing."""
 
-import numpy as np
-import torch
-from torch import nn
-from torch.utils.data import TensorDataset, DataLoader
 
 
 def load_and_preprocess(path: str):
@@ -37,63 +32,6 @@ def load_and_preprocess(path: str):
     train_dataset = TensorDataset(tensor_X_train, tensor_y_train)
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
-    return train_loader, tensor_X_test, tensor_y_test, (y_mean, y_std)
-
-
-def build_model(input_dim: int) -> nn.Module:
-    """Definir la arquitectura totalmente conectada."""
-    return nn.Sequential(
-        nn.Linear(input_dim, 64),
-        nn.ReLU(),
-        nn.Linear(64, 32),
-        nn.ReLU(),
-        nn.Linear(32, 1),
-    )
-
-
-def train(model: nn.Module, loader: DataLoader, criterion, optimizer, epochs: int = 20):
-    """Entrenar el modelo e imprimir el MSE de entrenamiento cada 5 épocas."""
-    for epoch in range(epochs):
-        model.train()
-        for batch_X, batch_y in loader:
-            optimizer.zero_grad()
-            preds = model(batch_X)
-            loss = criterion(preds, batch_y)
-            loss.backward()
-            optimizer.step()
-        if (epoch + 1) % 5 == 0:
-            print(f"Época {epoch+1}/{epochs} - MSE entrenamiento: {loss.item():.4f}")
-
-
-def evaluate(model: nn.Module, X_test, y_test, y_scale):
-    """Calcular el MSE y R² en el conjunto de prueba."""
-    model.eval()
-    with torch.no_grad():
-        preds = model(X_test)
-        preds_orig = preds.numpy() * y_scale[1] + y_scale[0]
-        y_test_orig = y_test.numpy() * y_scale[1] + y_scale[0]
-        mse = np.mean((preds_orig - y_test_orig) ** 2)
-        ss_res = ((preds_orig - y_test_orig) ** 2).sum()
-        ss_tot = ((y_test_orig - y_test_orig.mean()) ** 2).sum()
-        r2 = 1 - ss_res / ss_tot
-    print(f"MSE de prueba: {mse:.2f}")
-    print(f"R² de prueba: {r2:.4f}")
-
-
-def main():
-    print("Paso 1: cargar y preprocesar datos")
-    train_loader, X_test, y_test, y_scale = load_and_preprocess('CaliforniaHousing/cal_housing.data')
-
-    print("Paso 2: definir el modelo y los hiperparámetros")
-    model = build_model(X_test.shape[1])
-    criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
-    print("Paso 3: entrenar el modelo")
-    train(model, train_loader, criterion, optimizer)
-
-    print("Paso 4: evaluar el modelo")
-    evaluate(model, X_test, y_test, y_scale)
 
 
 if __name__ == '__main__':

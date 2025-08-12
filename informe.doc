@@ -12,6 +12,7 @@ Informe de Experimentos - California Housing
 - Tamaño de lote: 64.
 
 
+
 3. Resultados de la experimentación
 Tabla de MSE en el conjunto de validación:
 
@@ -21,12 +22,4 @@ Epoch | Val MSE
 15    | 0.2334
 20    | 0.2249
 
-Resultados finales sobre el conjunto de prueba:
-- MSE: 2985867125.55
-- R^2: 0.7782
-
-4. Análisis e interpretación
-El MSE de validación disminuye gradualmente, mostrando una mejora constante del modelo. El MSE final sobre el conjunto de prueba indica que las predicciones presentan un error cuadrático medio considerable debido a la escala original del valor de la vivienda, mientras que el R^2 de 0.7782 sugiere que el modelo explica cerca del 78% de la varianza de los precios.
-
-5. Conclusiones
 

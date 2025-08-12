@@ -5,14 +5,29 @@ from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 
-def load_and_preprocess(path: str):
-    """Cargar datos, dividirlos en entrenamiento/prueba y estandarizar."""
-    # 1) Carga de los datos desde el archivo .data
+def load_data(path: str = "CaliforniaHousing/cal_housing.data"):
+    """Load California Housing data, split, standardize and return tensors.
+
+    Parameters
+    ----------
+    path: str, optional
+        Path to the dataset file. Defaults to ``CaliforniaHousing/cal_housing.data``.
+
+    Returns
+    -------
+    train_dataset : TensorDataset
+        Training features and targets.
+    test_tensors : tuple of Tensors
+        Tuple ``(X_test, y_test)`` with standardized test data.
+    y_mean, y_std : np.ndarray
+        Mean and standard deviation used to standardize the targets.
+    """
+    # 1) Load the data from the .data file
     data = np.loadtxt(path, delimiter=',')
     X = data[:, :-1]
     y = data[:, -1:]
 
-    # 2) División 80/20 utilizando una permutación fija para reproducibilidad
+    # 2) 80/20 split with fixed permutation for reproducibility
     rng = np.random.default_rng(42)
     indices = rng.permutation(len(X))
     split = int(len(X) * 0.8)
@@ -20,7 +35,7 @@ def load_and_preprocess(path: str):
     X_train, X_test = X[train_idx], X[test_idx]
     y_train, y_test = y[train_idx], y[test_idx]
 
-    # 3) Estandarización de características y objetivo
+    # 3) Feature and target standardization
     X_mean, X_std = X_train.mean(axis=0), X_train.std(axis=0)
     y_mean, y_std = y_train.mean(axis=0), y_train.std(axis=0)
     X_train = (X_train - X_mean) / X_std
@@ -28,13 +43,14 @@ def load_and_preprocess(path: str):
     y_train = (y_train - y_mean) / y_std
     y_test = (y_test - y_mean) / y_std
 
-    # 4) Conversión a tensores y creación del DataLoader
+    # 4) Conversion to tensors
     tensor_X_train = torch.tensor(X_train, dtype=torch.float32)
     tensor_y_train = torch.tensor(y_train, dtype=torch.float32)
     tensor_X_test = torch.tensor(X_test, dtype=torch.float32)
     tensor_y_test = torch.tensor(y_test, dtype=torch.float32)
+
     train_dataset = TensorDataset(tensor_X_train, tensor_y_train)
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_tensors = (tensor_X_test, tensor_y_test)
 
     return train_dataset, test_tensors, y_mean, y_std
 

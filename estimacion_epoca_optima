@@ -1,0 +1,29 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Datos aproximados del gráfico observados visualmente
+epochs = np.arange(1, 21)
+train_mse = np.array([0.398, 0.282, 0.268, 0.258, 0.252, 0.248, 0.246, 0.241, 0.239, 0.234,
+                      0.231, 0.229, 0.227, 0.225, 0.223, 0.222, 0.220, 0.219, 0.218, 0.216])
+val_mse = np.array([0.310, 0.280, 0.269, 0.260, 0.256, 0.255, 0.257, 0.250, 0.250, 0.242,
+                    0.240, 0.235, 0.232, 0.230, 0.227, 0.225, 0.222, 0.223, 0.224, 0.224])
+
+# Calcular la diferencia relativa entre validación y entrenamiento
+gap = val_mse - train_mse
+
+# Determinar época óptima: MSE más bajo en validación antes de que suba o se estabilice
+opt_epoch = np.argmin(val_mse) + 1
+opt_val_mse = val_mse[opt_epoch - 1]
+
+# Graficar
+plt.figure(figsize=(8,5))
+plt.plot(epochs, train_mse, label="Train MSE")
+plt.plot(epochs, val_mse, label="Validation MSE")
+plt.axvline(opt_epoch, color='red', linestyle='--', label=f"Óptimo: época {opt_epoch}")
+plt.xlabel("Epoch")
+plt.ylabel("MSE")
+plt.title("Training y Validation MSE con Época Óptima")
+plt.legend()
+plt.show(), opt_epoch, opt_val_mse, gap[opt_epoch - 1]
+Result
+(None, 17, 0.222, 0.0020000000000000018)
